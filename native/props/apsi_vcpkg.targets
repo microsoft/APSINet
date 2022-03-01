@@ -1,0 +1,14 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+      <!-- Need to recreate vcpkg include dir -->
+      <VcpkgIncludeDir>$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet), 'include'))</VcpkgIncludeDir>
+      <VcpkgIncludeDir Condition="!$(VcpkgIncludeDir.EndsWith('\'))">$(VcpkgIncludeDir)\</VcpkgIncludeDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <!-- Additional directories that need to be specified -->
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgIncludeDir)SEAL-3.6</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgIncludeDir)Kuku-2.1</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

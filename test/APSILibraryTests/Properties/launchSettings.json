@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "APSILibraryTests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,0 +1,100 @@
+# Pipeline for building APSI-Net
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: 'APSILibrary.sln'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
+  VCPKGDIR: '$(Build.SourcesDirectory)\vcpkg'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .Net SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '5.x'
+    
+- task: NuGetToolInstaller@0
+  displayName: 'Install NuGet'
+  inputs:
+    versionSpec: '6.1.0'
+    checkLatest: true
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan'
+  inputs:
+    toolMajorVersion: 'V2'
+    outputFormat: sarif
+    debugMode: false
+
+- task: CmdLine@2
+  displayName: 'Bootstrap vcpkg'
+  inputs:
+    script: |
+      cd $(Build.SourcesDirectory)
+      git clone https://github.com/microsoft/vcpkg.git
+      cd vcpkg
+      bootstrap-vcpkg.bat -disableMetrics
+    workingDirectory: '$(Build.SourcesDirectory)'
+    failOnStderr: false
+
+- task: CmdLine@2
+  displayName: 'Configure vcpkg dependencies'
+  inputs:
+    script: |
+      vcpkg install --triplet=x64-windows-static-md cppzmq flatbuffers gtest kuku log4cplus seal[ms-gsl,zstd,no-throw-tran] tclap jsoncpp
+    workingDirectory: '$(Build.SourcesDirectory)/vcpkg'
+    failOnStderr: false
+
+- task: NuGetCommand@2
+  displayName: 'Restore solution'
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests'
+  inputs:
+    command: 'test'
+    projects: '$(Build.SourcesDirectory)/test/APSILibraryTests/APSILibraryTests.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    testRunTitle: 'APSILibrary unit tests'
+
+- task: Semmle@0
+  displayName: 'Semmle'
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    sourceCodeDirectory: '$(Build.SourcesDirectory)'
+    language: 'cpp'
+    querySuite: 'Recommended'
+    timeout: '1800'
+    ram: '16384'
+    addProjectDirToScanningExclusionList: true
+    buildCommands: '"%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsMSBuildCmd.bat" && msbuild $(Build.SourcesDirectory)/APSILibrary.sln'
+    cleanupBuildCommands: '"%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsMSBuildCmd.bat" && msbuild $(Build.SourcesDirectory)/APSILibrary.sln /t:Clean'
+
+- task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+  displayName: 'Component Detection'
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@2
+  displayName: 'Publish Security Analysis Logs'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish build artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

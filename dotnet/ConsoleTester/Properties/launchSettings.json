@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ConsoleTester": {
+      "commandName": "Project",
+      "commandLineArgs": "--dbSize 300000 --itemCount 300 --matchItems 200 --iterations 10 --parameters ..\\..\\..\\parameters\\edge-parameters.json",
+      "nativeDebugging": true
+    }
+  }
+}

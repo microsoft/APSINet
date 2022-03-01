@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\APSIClient\APSIClient.csproj" />
+    <ProjectReference Include="..\APSIServer\APSIServer.csproj" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <APSIClientBinaryFiles Include="$(ProjectDir)../../x64/$(Configuration)/APSIClientNative.*" />
+        <APSIServerBinaryFiles Include="$(ProjectDir)../../x64/$(Configuration)/APSIServerNative.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20071.2" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Copy SourceFiles="@(APSIClientBinaryFiles)" DestinationFolder="$(TargetDir)" />
+        <Copy SourceFiles="@(APSIServerBinaryFiles)" DestinationFolder="$(TargetDir)" />
+    </Target>
+
+</Project>
