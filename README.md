@@ -8,11 +8,6 @@ APSINet is a set of C# wrappers for the [APSI](https://github.com/microsoft/APSI
 
 Currently compiling APSINet is only supported in Windows. You will need Visual Studio 2019 or newer to compile APSINet.
 
-### Initialization
-This library contains the original APSI library as a submodule. To initialize it please run:
-
-``` git submodule update --init ```
-
 ### Setting up vcpkg
 APSINet depends on APSI, which depends on several C++ libraries to compile. You will need to clone the [vcpkg repository](https://github.com/microsoft/vcpkg) into a local directory. After the code has been cloned, please initialize vcpkg by running:
 
@@ -20,7 +15,7 @@ APSINet depends on APSI, which depends on several C++ libraries to compile. You 
 
 After bootstrapping is complete, please run the following command to install the required dependencies:
 
-``` vcpkg install --triplet=x64-windows-static-md cppzmq flatbuffers gtest kuku log4cplus seal[ms-gsl,zstd,no-throw-tran] tclap jsoncpp ```
+``` vcpkg install --triplet=x64-windows-static-md apsi[hexl,log4cplus] ```
 
 After installation is complete, please setup an environment variable called `VCPKGDIR` pointing to the directory where `vcpkg` was cloned. The Microsoft Visual Studio solution will use this variable to fine the required dependencies for APSI.
 
