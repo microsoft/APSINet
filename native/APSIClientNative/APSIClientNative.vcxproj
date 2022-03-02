@@ -97,7 +97,7 @@
       <PreprocessorDefinitions>APSICLIENTNATIVE;NOMINMAX;NDEBUG;APSICLIENTDYNLIB_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\APSIClient;$(ProjectDir)..\External\APSI\common\native;$(ProjectDir)..\External\APSI\receiver\native;$(ProjectDir)..\External\APSI\build\$(Configuration)\common\native;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\APSIClient;$(VCPKGDIR)\installed\x64-windows-static-md\include\APSI-0.7;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,7 +135,7 @@
       <PreprocessorDefinitions>APSICLIENTNATIVE;NOMINMAX;_DEBUG;APSICLIENTDYNLIB_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\APSIClient;$(ProjectDir)..\External\APSI\common\native;$(ProjectDir)..\External\APSI\receiver\native;$(ProjectDir)..\External\APSI\build\$(Configuration)\common\native;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\APSIClient;$(VCPKGDIR)\installed\x64-windows-static-md\include\APSI-0.7;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
