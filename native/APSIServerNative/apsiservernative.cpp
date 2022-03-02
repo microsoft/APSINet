@@ -39,13 +39,6 @@ static int server_instance_count_s = 0;
 
 
 namespace {
-    //// Special deleter that does nothing. Used to initialize a shared_ptr that will _not_
-    //// delete the pointer.
-    //template <typename T, typename Deleter = typename std::default_delete<T> >
-    //struct NoOpDelete : private Deleter {
-    //    void operator()(T* ptr) {  }
-    //};
-
     class APSIServer
     {
     public:
